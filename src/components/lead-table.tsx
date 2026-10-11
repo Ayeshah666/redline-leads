@@ -35,7 +35,7 @@ export function LeadTable({
 }: {
   leads: Lead[];
   initialFilters?: TableFilters;
-  onRemove?: (ids: string[]) => void;
+  onRemove?: ((ids: string[]) => void) | undefined;
   removeLabel?: string;
   exportName?: string;
   toolbarExtra?: ReactNode;
