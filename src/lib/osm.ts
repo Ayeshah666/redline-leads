@@ -95,7 +95,8 @@ export async function searchBusinesses(f: SearchFilters, signal: AbortSignal | n
   throw lastErr ?? new ProviderError("Business data provider unavailable.");
 }
 
-interface El { type: string; id: number; lat?: number; lon?: number; center?: { lat: number; lon: number }; tags?: Record<string, string> }
+interface El { type: string; id: number; lat?: number; lon?: number; center?: { lat: number; lon: number }; tags?: Tags }
+type Tags = { [k: string]: string | undefined; name?: string; website?: string; url?: string; phone?: string; email?: string; opening_hours?: string }
 
 export function normalizeUrl(u?: string) {
   if (!u) return undefined;
@@ -110,12 +111,13 @@ function normalize(els: El[], category: string, place: string): Lead[] {
   const seen = new Set<string>();
   const out: Lead[] = [];
   for (const e of els) {
-    const t = e.tags ?? {};
-    if (!t.name) continue;
+    const t: Tags = e.tags ?? {};
+    const name = t.name;
+    if (!name) continue;
     const website = normalizeUrl(t.website || t["contact:website"] || t.url);
     const addr = [t["addr:housenumber"], t["addr:street"]].filter(Boolean).join(" ");
     const city = t["addr:city"] || t["addr:suburb"] || place.split(",")[0];
-    const key = `${t.name.toLowerCase()}|${addr.toLowerCase()}`;
+    const key = `${name.toLowerCase()}|${addr.toLowerCase()}`;
     if (seen.has(key)) continue;
     seen.add(key);
     out.push({
@@ -123,11 +125,11 @@ function normalize(els: El[], category: string, place: string): Lead[] {
       sourceId: `osm:${e.type}/${e.id}`,
       source: "OpenStreetMap",
       sourceUrl: `https://www.openstreetmap.org/${e.type}/${e.id}`,
-      name: t.name.trim(),
+      name: name.trim(),
       category,
       address: [addr, t["addr:postcode"]].filter(Boolean).join(", ") || undefined,
       city,
-      phone: (t.phone || t["contact:phone"])?.split(";")[0].trim(),
+      phone: (t.phone || t["contact:phone"])?.split(";")[0]?.trim(),
       email: t.email || t["contact:email"],
       website,
       openingHours: t.opening_hours,

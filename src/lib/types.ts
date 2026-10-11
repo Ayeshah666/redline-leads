@@ -34,15 +34,15 @@ export interface AuditCheck {
 export interface AuditResult {
   id: string;
   url: string;
-  finalUrl?: string;
+  finalUrl?: string | undefined;
   checkedAt: string;
   reachable: boolean;
-  httpStatus?: number;
-  responseMs?: number;
-  bytes?: number;
-  title?: string;
-  description?: string;
-  error?: string;
+  httpStatus?: number | undefined;
+  responseMs?: number | undefined;
+  bytes?: number | undefined;
+  title?: string | undefined;
+  description?: string | undefined;
+  error?: string | undefined;
   checks: AuditCheck[];
   suggestions: string[];
 }
@@ -51,25 +51,25 @@ export interface Lead {
   id: string;
   sourceId: string;
   source: LeadSource;
-  sourceUrl?: string;
+  sourceUrl?: string | undefined;
   name: string;
   category: string;
-  address?: string;
-  city?: string;
-  phone?: string;
-  email?: string;
-  website?: string;
-  openingHours?: string;
-  lat?: number;
-  lon?: number;
-  rating?: number;
-  reviewCount?: number;
+  address?: string | undefined;
+  city?: string | undefined;
+  phone?: string | undefined;
+  email?: string | undefined;
+  website?: string | undefined;
+  openingHours?: string | undefined;
+  lat?: number | undefined;
+  lon?: number | undefined;
+  rating?: number | undefined;
+  reviewCount?: number | undefined;
   websiteStatus: WebsiteStatus;
   stage: Stage;
   notes: string;
   saved: boolean;
   discoveredAt: string;
-  lastCheckedAt?: string;
+  lastCheckedAt?: string | undefined;
   audits: AuditResult[];
 }
 
@@ -84,8 +84,8 @@ export interface SearchFilters {
   category: string;
   location: string;
   radiusKm: number;
-  minRating?: number;
-  minReviews?: number;
+  minRating?: number | undefined;
+  minReviews?: number | undefined;
   websiteFilter: "any" | "none" | "listed";
 }
 
@@ -96,7 +96,7 @@ export interface SearchRecord {
   resultCount: number;
   provider: string;
   outcome: "success" | "empty" | "error";
-  error?: string;
+  error?: string | undefined;
   leadIds: string[];
 }
 
@@ -105,8 +105,8 @@ export interface Activity {
   at: string;
   kind: "search" | "save" | "import" | "export" | "audit" | "stage" | "list";
   text: string;
-  leadId?: string;
-  link?: string;
+  leadId?: string | undefined;
+  link?: string | undefined;
 }
 
 export interface Settings {

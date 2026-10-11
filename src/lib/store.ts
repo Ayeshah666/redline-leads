@@ -93,7 +93,7 @@ export function upsertLeads(incoming: Lead[]): { ids: string[]; added: number; d
     const existing = bySource.get(l.sourceId) ?? byKey.get(dedupeKey(l));
     if (existing) {
       duplicates++;
-      const old = leads[existing];
+      const old = leads[existing]!;
       // refresh public fields, keep user fields
       leads[existing] = {
         ...old,
