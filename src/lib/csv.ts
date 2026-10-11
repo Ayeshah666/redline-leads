@@ -30,7 +30,7 @@ export function leadsToCsv(leads: Lead[], includeNotes = true) {
       "Date discovered": l.discoveredAt,
       "Last checked": l.lastCheckedAt ?? "",
     };
-    if (!includeNotes) delete r.Notes;
+    if (!includeNotes) delete r["Notes"];
     return Object.fromEntries(Object.entries(r).map(([k, v]) => [k, safeCell(v)]));
   });
   return Papa.unparse(rows);

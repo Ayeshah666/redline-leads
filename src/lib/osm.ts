@@ -27,7 +27,7 @@ let lastNominatim = 0;
 const geoCache = new Map<string, Geo>();
 interface Geo { lat: number; lon: number; display: string; bbox: [number, number, number, number] }
 
-export async function geocode(q: string, signal?: AbortSignal): Promise<Geo> {
+export async function geocode(q: string, signal: AbortSignal | null = null): Promise<Geo> {
   const key = q.trim().toLowerCase();
   if (geoCache.has(key)) return geoCache.get(key)!;
   const wait = 1100 - (Date.now() - lastNominatim);
@@ -70,7 +70,7 @@ function selectors(category: string): string[] {
 
 const OVERPASS = ["https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter"];
 
-export async function searchBusinesses(f: SearchFilters, signal?: AbortSignal, onStatus?: (s: string) => void) {
+export async function searchBusinesses(f: SearchFilters, signal: AbortSignal | null = null, onStatus?: (s: string) => void) {
   onStatus?.(`Locating “${f.location}”…`);
   const geo = await geocode(f.location, signal);
   const radius = Math.max(0.5, Math.min(25, f.radiusKm)) * 1000;

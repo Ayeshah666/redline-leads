@@ -23,11 +23,11 @@ export async function auditUrl(url: string): Promise<AuditResult> {
   return runAudit({ data: { url } });
 }
 
-export async function auditLead(id: string) {
+export async function auditLead(id: string): Promise<AuditResult | undefined> {
   const lead = getState().leads[id];
   if (!lead?.website) {
     toast.error("This lead has no website URL to check.");
-    return;
+    return undefined;
   }
   try {
     const r = await auditUrl(lead.website);
@@ -42,6 +42,7 @@ export async function auditLead(id: string) {
     return r;
   } catch (e) {
     toast.error(`Audit could not run: ${(e as Error).message}`);
+    return undefined;
   }
 }
 
@@ -49,7 +50,7 @@ export function copyContacts(ids: string[]) {
   const s = getState();
   const text = ids
     .map((id) => s.leads[id])
-    .filter(Boolean)
+    .filter((l): l is NonNullable<typeof l> => !!l)
     .map((l) => [l.name, l.phone, l.email, l.website].filter(Boolean).join(" · "))
     .join("\n");
   navigator.clipboard.writeText(text).then(

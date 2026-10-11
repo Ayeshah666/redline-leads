@@ -86,8 +86,8 @@ export function LeadTable({
 
   const doExport = (ids: string[]) => {
     const s = getState();
-    const data = ids.map((id) => s.leads[id]).filter(Boolean);
-    if (!data.length) return toast.error("Nothing to export.");
+    const data = ids.map((id) => s.leads[id]).filter((x): x is Lead => !!x);
+    if (!data.length) { toast.error("Nothing to export."); return; }
     download(`${exportName}-${new Date().toISOString().slice(0, 10)}.csv`, leadsToCsv(data, includeNotes));
     logActivity({ kind: "export", text: `Exported ${data.length} leads to CSV` });
     toast.success(`Exported ${data.length} leads`);

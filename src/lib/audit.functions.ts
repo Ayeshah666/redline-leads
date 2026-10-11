@@ -9,7 +9,7 @@ const MAX_REDIRECTS = 4;
 function isPrivateIPv4(ip: string) {
   const p = ip.split(".").map(Number);
   if (p.length !== 4 || p.some((n) => isNaN(n) || n < 0 || n > 255)) return true;
-  const [a, b] = p;
+  const a = p[0]!, b = p[1]!;
   return (
     a === 0 || a === 10 || a === 127 || a >= 224 ||
     (a === 100 && b >= 64 && b <= 127) ||
@@ -25,7 +25,7 @@ function isPrivateIPv6(ip: string) {
   if (x === "::" || x === "::1") return true;
   if (x.startsWith("fc") || x.startsWith("fd") || x.startsWith("fe80")) return true;
   const mapped = x.match(/::ffff:(\d+\.\d+\.\d+\.\d+)$/);
-  if (mapped) return isPrivateIPv4(mapped[1]);
+  if (mapped) return isPrivateIPv4(mapped[1]!);
   return false;
 }
 
@@ -165,7 +165,7 @@ export const runAudit = createServerFn({ method: "POST" })
       const noAlt = imgs.filter((t) => !/\salt=/i.test(t)).length;
       checks.push({ id: "alt", category: "Mobile readiness", label: "Image alt text", status: imgs.length === 0 ? "unknown" : noAlt === 0 ? "pass" : noAlt / imgs.length > 0.3 ? "fail" : "warn", detail: imgs.length ? `${noAlt} of ${imgs.length} images missing alt text.` : "No images found in initial HTML." });
 
-      const links = [...html.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)].map((m) => `${m[1]} ${m[2].replace(/<[^>]+>/g, " ")}`.toLowerCase());
+      const links = [...html.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)].map((m) => `${m[1]} ${(m[2] ?? "").replace(/<[^>]+>/g, " ")}`.toLowerCase());
       const contact = links.some((l) => /contact|kontakt|contacto|get in touch/.test(l));
       const tel = /href=["']tel:/i.test(html);
       const mail = /href=["']mailto:/i.test(html);
@@ -190,7 +190,7 @@ export const runAudit = createServerFn({ method: "POST" })
       og: "Add social sharing tags so links shared on WhatsApp/Facebook show a preview.",
       reach: "Fix the site's availability — it returned an error status.",
     };
-    const suggestions = checks.filter((c) => c.status === "fail" || (c.status === "warn" && ["contact", "tel", "og"].includes(c.id))).map((c) => S[c.id]).filter(Boolean);
+    const suggestions = checks.filter((c) => c.status === "fail" || (c.status === "warn" && ["contact", "tel", "og"].includes(c.id))).map((c) => S[c.id]).filter((x): x is string => !!x);
 
     return { id, url: input, finalUrl: url.toString(), checkedAt, reachable: ok, httpStatus: r.status, responseMs: ms, bytes, title, description, checks, suggestions };
   });
