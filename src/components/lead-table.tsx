@@ -17,10 +17,10 @@ type SortKey = "name" | "category" | "city" | "websiteStatus" | "rating" | "revi
 type Row = Lead & { score: Score };
 
 export interface TableFilters {
-  web?: WebsiteStatus | "";
-  saved?: boolean;
-  label?: Score["label"] | "";
-  stage?: string;
+  web?: WebsiteStatus | "" | undefined;
+  saved?: boolean | undefined;
+  label?: Score["label"] | "" | undefined;
+  stage?: string | undefined;
 }
 
 const PAGE = 25;

@@ -10,6 +10,7 @@ import { PageHeader, EmptyState } from "@/components/page-header";
 import { LeadTable } from "@/components/lead-table";
 import { createList, deleteList, removeFromList, renameList, useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import type { Lead } from "@/lib/types";
 
 export const Route = createFileRoute("/lists")({
   head: () => ({
@@ -32,12 +33,12 @@ function ListsPage() {
   const [del, setDel] = useState<string | null>(null);
 
   const list = lists.find((l) => l.id === active);
-  const current = active === "__saved" ? Object.values(leads).filter((l) => l.saved) : (list?.leadIds ?? []).map((id) => leads[id]).filter(Boolean);
+  const current = active === "__saved" ? Object.values(leads).filter((l) => l.saved) : (list?.leadIds ?? []).map((id) => leads[id]).filter((x): x is Lead => !!x);
 
   const submit = () => {
     const name = dialog?.name.trim();
     if (!name) return;
-    if (lists.some((l) => l.name.toLowerCase() === name.toLowerCase() && l.id !== dialog?.id)) return toast.error("A list with that name already exists.");
+    if (lists.some((l) => l.name.toLowerCase() === name.toLowerCase() && l.id !== dialog?.id)) { toast.error("A list with that name already exists."); return; }
     if (dialog?.mode === "new") setActive(createList(name));
     else if (dialog?.id) renameList(dialog.id, name);
     setDialog(null);
