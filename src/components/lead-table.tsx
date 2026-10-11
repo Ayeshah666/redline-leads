@@ -157,8 +157,8 @@ export function LeadTable({
               {th("city", "Location")}
               <th className="px-3 py-2 text-left font-medium">Phone</th>
               {th("websiteStatus", "Website")}
-              {th("rating", "Rating", "hidden xl:table-cell")}
-              {th("reviewCount", "Reviews", "hidden xl:table-cell")}
+              {th("rating", "Rating", "hidden 2xl:table-cell")}
+              {th("reviewCount", "Reviews", "hidden 2xl:table-cell")}
               {th("score", "Score")}
               {th("stage", "Stage", "hidden lg:table-cell")}
               <th className="w-10" />
@@ -174,7 +174,7 @@ export function LeadTable({
                   </button>
                 </td>
                 <td className="hidden max-w-[150px] truncate px-3 py-2 text-muted-foreground xl:table-cell">{l.category}</td>
-                <td className="max-w-[200px] truncate px-3 py-2 text-muted-foreground" title={[l.address, l.city].filter(Boolean).join(", ")}>{[l.address, l.city].filter(Boolean).join(", ") || "—"}</td>
+                <td className="max-w-[180px] truncate px-3 py-2 text-muted-foreground" title={[l.address, l.city].filter(Boolean).join(", ")}>{[l.address, l.city].filter(Boolean).join(", ") || "—"}</td>
                 <td className="whitespace-nowrap px-3 py-2 tnum">{l.phone ?? <span className="text-muted-foreground">—</span>}</td>
                 <td className="px-3 py-2">
                   <div className="flex flex-col gap-1">
@@ -182,8 +182,8 @@ export function LeadTable({
                     {l.website && <a href={l.website} target="_blank" rel="noreferrer noopener" className="max-w-[180px] truncate text-xs text-muted-foreground hover:text-primary" title={l.website}>{l.website.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}</a>}
                   </div>
                 </td>
-                <td className="hidden px-3 py-2 tnum xl:table-cell">{l.rating ?? <span className="text-muted-foreground" title="Not provided by the data source">n/a</span>}</td>
-                <td className="hidden px-3 py-2 tnum xl:table-cell">{l.reviewCount ?? <span className="text-muted-foreground">n/a</span>}</td>
+                <td className="hidden px-3 py-2 tnum 2xl:table-cell">{l.rating ?? <span className="text-muted-foreground" title="Not provided by the data source">n/a</span>}</td>
+                <td className="hidden px-3 py-2 tnum 2xl:table-cell">{l.reviewCount ?? <span className="text-muted-foreground">n/a</span>}</td>
                 <td className="px-3 py-2"><ScoreBadge score={l.score} /></td>
                 <td className="hidden px-3 py-2 lg:table-cell"><StageBadge stage={l.stage} /></td>
                 <td className="px-2 py-2"><RowMenu lead={l} /></td>
