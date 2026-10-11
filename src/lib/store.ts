@@ -133,7 +133,7 @@ export function setStage(ids: string[], stage: Stage) {
   });
   logActivity({
     kind: "stage",
-    text: ids.length === 1 ? `${load().leads[ids[0]]?.name} moved to ${stage}` : `${ids.length} leads moved to ${stage}`,
+    text: ids.length === 1 ? `${load().leads[ids[0]!]?.name} moved to ${stage}` : `${ids.length} leads moved to ${stage}`,
     leadId: ids.length === 1 ? ids[0] : undefined,
   });
 }

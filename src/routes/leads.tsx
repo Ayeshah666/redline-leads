@@ -10,11 +10,11 @@ import type { WebsiteStatus } from "@/lib/types";
 import type { Score } from "@/lib/scoring";
 
 export const Route = createFileRoute("/leads")({
-  validateSearch: (s: Record<string, unknown>): { web?: string; saved?: boolean; label?: string; stage?: string } => ({
-    web: typeof s.web === "string" ? s.web : undefined,
-    saved: s.saved === true || s.saved === "1" || s.saved === "true" ? true : undefined,
-    label: typeof s.label === "string" ? s.label : undefined,
-    stage: typeof s.stage === "string" ? s.stage : undefined,
+  validateSearch: (s: Record<string, unknown>): { web?: string | undefined; saved?: boolean | undefined; label?: string | undefined; stage?: string | undefined } => ({
+    web: typeof s["web"] === "string" ? s["web"] : undefined,
+    saved: s["saved"] === true || s["saved"] === "1" || s["saved"] === "true" ? true : undefined,
+    label: typeof s["label"] === "string" ? s["label"] : undefined,
+    stage: typeof s["stage"] === "string" ? s["stage"] : undefined,
   }),
   head: () => ({
     meta: [

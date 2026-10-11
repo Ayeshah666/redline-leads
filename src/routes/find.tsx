@@ -11,10 +11,10 @@ import { PageHeader, EmptyState } from "@/components/page-header";
 import { LeadTable } from "@/components/lead-table";
 import { CATEGORY_PRESETS, ProviderError, searchBusinesses } from "@/lib/osm";
 import { addHistory, getState, logActivity, uid, upsertLeads, useStore } from "@/lib/store";
-import type { SearchFilters } from "@/lib/types";
+import type { Lead, SearchFilters } from "@/lib/types";
 
 export const Route = createFileRoute("/find")({
-  validateSearch: (s: Record<string, unknown>): { h?: string } => ({ h: typeof s.h === "string" ? s.h : undefined }),
+  validateSearch: (s: Record<string, unknown>): { h?: string | undefined } => ({ h: typeof s["h"] === "string" ? s["h"] : undefined }),
   head: () => ({
     meta: [
       { title: "Find Leads — Redline Leads" },
@@ -51,8 +51,8 @@ function FindPage() {
 
   async function run(e?: React.FormEvent) {
     e?.preventDefault();
-    if (!f.category.trim()) return setError("Enter a business category.");
-    if (f.location.trim().length < 2) return setError("Enter a city, region or country.");
+    if (!f.category.trim()) { setError("Enter a business category."); return; }
+    if (f.location.trim().length < 2) { setError("Enter a city, region or country."); return; }
     setError(null);
     abort.current?.abort();
     const ctrl = new AbortController();
@@ -81,7 +81,7 @@ function FindPage() {
     }
   }
 
-  const resultLeads = (result?.ids ?? []).map((id) => leadsMap[id]).filter(Boolean);
+  const resultLeads = (result?.ids ?? []).map((id) => leadsMap[id]).filter((x): x is Lead => !!x);
   const hasRatingFilter = (f.minRating ?? 0) > 0 || (f.minReviews ?? 0) > 0;
 
   return (

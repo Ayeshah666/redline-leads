@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { addToList, patchLead, removeFromList, setSaved, setStage, useStore } from "@/lib/store";
 import { auditLead, openLead, useOpenLead } from "@/lib/lead-actions";
 import { scoreLead, SCORE_THRESHOLDS } from "@/lib/scoring";
-import { STAGES, type Stage } from "@/lib/types";
+import { STAGES, type Lead, type Stage } from "@/lib/types";
 import { ScoreBadge, WebsiteStatusBadge, pill } from "./badges";
 import { AuditReport } from "./audit-report";
 
@@ -152,7 +152,7 @@ export function LeadDetailSheet() {
   );
 }
 
-function outreach(lead: { name: string; category: string; city?: string; audits: { checks: { status: string; label: string; detail: string }[] }[]; websiteStatus: string }, _sc: unknown) {
+function outreach(lead: Lead, _sc: unknown) {
   const a = lead.audits[0];
   const fail = a?.checks.find((c) => c.status === "fail");
   const obs = fail ? `while checking your website that ${fail.detail.charAt(0).toLowerCase() + fail.detail.slice(1)}` : lead.websiteStatus === "none" ? "that I couldn't find a website listed for you on OpenStreetMap" : "[add a verified observation]";

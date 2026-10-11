@@ -36,13 +36,13 @@ function IOPage() {
   const includeNotes = useStore((s) => s.settings.exportIncludeNotes);
 
   const onFile = (f: File) => {
-    if (f.size > 5_000_000) return toast.error("File is larger than 5 MB.");
+    if (f.size > 5_000_000) { toast.error("File is larger than 5 MB."); return; }
     Papa.parse<Raw>(f, {
       header: true,
       skipEmptyLines: true,
       complete: (r) => {
         const h = r.meta.fields ?? [];
-        if (!h.length) return toast.error("Couldn't find a header row in this CSV.");
+        if (!h.length) { toast.error("Couldn't find a header row in this CSV."); return; }
         setFile(f.name); setRows(r.data.slice(0, 5000)); setHeaders(h); setMap(autoMap(h));
       },
       error: (e) => toast.error(`Could not read CSV: ${e.message}`),
@@ -88,8 +88,8 @@ function IOPage() {
   const exportAll = (which: "all" | "saved" | string) => {
     const s = getState();
     const all = Object.values(s.leads);
-    const data = which === "all" ? all : which === "saved" ? all.filter((l) => l.saved) : (s.lists.find((l) => l.id === which)?.leadIds ?? []).map((id) => s.leads[id]).filter(Boolean);
-    if (!data.length) return toast.error("Nothing to export.");
+    const data = which === "all" ? all : which === "saved" ? all.filter((l) => l.saved) : (s.lists.find((l) => l.id === which)?.leadIds ?? []).map((id) => s.leads[id]).filter((x): x is Lead => !!x);
+    if (!data.length) { toast.error("Nothing to export."); return; }
     download(`redline-leads-${which === "all" || which === "saved" ? which : "list"}-${new Date().toISOString().slice(0, 10)}.csv`, leadsToCsv(data, includeNotes));
     logActivity({ kind: "export", text: `Exported ${data.length} leads to CSV` });
   };

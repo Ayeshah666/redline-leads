@@ -30,7 +30,7 @@ function AuditPage() {
 
   async function go(e: React.FormEvent) {
     e.preventDefault();
-    if (url.trim().length < 4) return toast.error("Enter a website address.");
+    if (url.trim().length < 4) { toast.error("Enter a website address."); return; }
     setLoading(true);
     setResult(null);
     try {
